@@ -1,5 +1,6 @@
 #include <SDL.h>
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 #include <iostream>
 
@@ -81,6 +82,9 @@ int main(int argc, char* argv[])
 
     std::cout << "OpenGL Version: "
         << glGetString(GL_VERSION) << '\n';
+
+    std::cout << "GLM test: "
+        << glm::vec3(3, 6, 9).y << std::endl;
 
     // Main loop
     bool running = true;

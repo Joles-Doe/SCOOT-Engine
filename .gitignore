@@ -72,8 +72,8 @@ compile_commands.json
 /.cache/
 
 # keep external libraries
-!external/
-!external/**
+!/external/
+!/external/**
 
 # IDE Specific
 /.vs/

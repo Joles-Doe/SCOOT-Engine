@@ -14,7 +14,6 @@ include(FetchContent)
 
 find_package(OpenGL REQUIRED)
 
-
 # --------------------------------------------------
 # SDL2
 # --------------------------------------------------
@@ -31,7 +30,6 @@ FetchContent_Declare(
 )
 
 FetchContent_MakeAvailable(SDL2)
-
 
 # --------------------------------------------------
 # GLEW
@@ -64,6 +62,18 @@ set_target_properties(
         INTERFACE_INCLUDE_DIRECTORIES "${GLEW_INCLUDE_DIR}"
 )
 
+# --------------------------------------------------
+# GLM
+# --------------------------------------------------
+
+FetchContent_Declare(
+    GLM
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 1.0.3
+    GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(GLM)
 
 # --------------------------------------------------
 # Dear ImGui
@@ -101,9 +111,8 @@ target_link_libraries(imgui PUBLIC
     OpenGL::GL
 )
 
-
 # --------------------------------------------------
-# SCOOT-Engine executable
+# Executable
 # --------------------------------------------------
 
 add_executable(SCOOT-Engine
@@ -125,5 +134,6 @@ target_link_libraries(SCOOT-Engine PRIVATE
     SDL2::SDL2
     GLEW::GLEW
     OpenGL::GL
+    glm::glm
     imgui
 )
