@@ -75,6 +75,10 @@ compile_commands.json
 !/external/
 !/external/**
 
+# keep assets
+!/assets/
+!/assets/**
+
 # IDE Specific
 /.vs/
 *.VC.db

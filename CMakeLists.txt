@@ -133,12 +133,70 @@ install(
     DESTINATION .
 )
 
+# --------------------------------------------------
+# Development Asset Sync
+# --------------------------------------------------
+
+add_custom_target(CopyDevAssets ALL
+    COMMAND "${CMAKE_COMMAND}"
+        "-DSOURCE_DIR=${CMAKE_SOURCE_DIR}/assets"
+        "-DDEST_DIR=${CMAKE_BINARY_DIR}/assets"
+        -P "${CMAKE_SOURCE_DIR}/SyncAssets.cmake"
+    VERBATIM
+)
+
+# --------------------------------------------------
+# Distribution Asset Sync
+# --------------------------------------------------
+
+add_custom_target(CopyDistAssets ALL
+    COMMAND "${CMAKE_COMMAND}"
+        "-DSOURCE_DIR=${CMAKE_SOURCE_DIR}/assets"
+        "-DDEST_DIR=${CMAKE_SOURCE_DIR}/dist/assets"
+        -P "${CMAKE_SOURCE_DIR}/SyncAssets.cmake"
+    VERBATIM
+)
+
+# --------------------------------------------------
+# Development GLEW DLL
+# --------------------------------------------------
+
+add_custom_target(CopyDevGLEW ALL
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${GLEW_ROOT}/bin/Release/x64/glew32.dll"
+        "$<TARGET_FILE_DIR:SCOOT-Engine>/glew32.dll"
+    DEPENDS SCOOT-Engine
+    VERBATIM
+)
+
+# --------------------------------------------------
+# Distribution GLEW DLL
+# --------------------------------------------------
+
+add_custom_target(CopyDistGLEW ALL
+    COMMAND "${CMAKE_COMMAND}" -E make_directory
+        "${CMAKE_SOURCE_DIR}/dist"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${GLEW_ROOT}/bin/Release/x64/glew32.dll"
+        "${CMAKE_SOURCE_DIR}/dist/glew32.dll"
+    VERBATIM
+)
+
+# --------------------------------------------------
+# Automatic Deployment
+# --------------------------------------------------
+
 add_custom_command(TARGET SCOOT-Engine POST_BUILD
-    COMMAND ${CMAKE_COMMAND}
+    COMMAND "${CMAKE_COMMAND}"
         --install "${CMAKE_BINARY_DIR}"
         --prefix "${CMAKE_SOURCE_DIR}/dist"
         --config "$<CONFIG>"
+    VERBATIM
 )
+
+# --------------------------------------------------
+# Linking
+# --------------------------------------------------
 
 target_include_directories(SCOOT-Engine PRIVATE
     "${sdl2_SOURCE_DIR}/include"
