@@ -46,6 +46,7 @@
 /out/
 /bin/
 /obj/
+/dist/
 
 # CMake generated files
 /CMakeFiles/

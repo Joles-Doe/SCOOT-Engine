@@ -119,6 +119,13 @@ add_executable(SCOOT-Engine
     src/main.cpp
 )
 
+add_custom_command(TARGET SCOOT-Engine POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different
+        "${GLEW_ROOT}/bin/Release/x64/glew32.dll"
+        "$<TARGET_FILE_DIR:SCOOT-Engine>/glew32.dll"
+    VERBATIM
+)
+
 # --------------------------------------------------
 # Distribution
 # --------------------------------------------------
