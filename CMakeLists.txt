@@ -117,7 +117,8 @@ target_link_libraries(imgui PUBLIC
 
 add_executable(SCOOT-Engine
     src/main.cpp
-)
+ "src/Foundation/Foundation.h" 
+ "src/Foundation/Foundation.cpp")
 
 add_custom_command(TARGET SCOOT-Engine POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different
