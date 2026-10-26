@@ -1,6 +1,6 @@
-#include "Foundation.h"
+#include "Window.h"
 
-Foundation::Foundation()
+Window::Window(int windowWidth, int windowHeight, const char* windowName)
 {
     if (SDL_Init(SDL_INIT_VIDEO) != 0)
     {
@@ -27,11 +27,11 @@ Foundation::Foundation()
     //SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
     window = SDL_CreateWindow(
-        "SCOOT Engine",
+        windowName,
         SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
-        1280,
-        720,
+        windowWidth,
+        windowHeight,
         SDL_WINDOW_OPENGL |
         SDL_WINDOW_SHOWN |
         SDL_WINDOW_RESIZABLE
@@ -48,14 +48,14 @@ Foundation::Foundation()
     }
 }
 
-Foundation::~Foundation()
+Window::~Window()
 {
     SDL_GL_DeleteContext(window);
     SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
-void Foundation::SwapWindow()
+void Window::SwapWindow()
 {
     SDL_GL_SwapWindow(window);
 }

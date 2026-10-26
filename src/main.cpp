@@ -1,18 +1,20 @@
 #include <SDL.h>
 #include <memory>
 
-#include "Foundation/Foundation.h"
+#include "Core/Core.h"
 
 int main(int argc, char* argv[])
 {
-    auto foundation = std::make_shared<Foundation>();
+    srand(time(NULL));
+    
+    auto core = std::make_unique<Core>();
 
-    foundation->SwapWindow();
+    bool quit = false;
+    while (!quit)
+    {
+        //do stuff
+
+    }
 
     return 0;
 }
-
-
-/* Todo
-Make window class (will be encapsulated by Foundation (Foundation will handle swapwindow) )
-*/

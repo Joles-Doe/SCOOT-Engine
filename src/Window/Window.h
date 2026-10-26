@@ -4,11 +4,11 @@
 #include <GL/glew.h>
 #include <iostream>
 
-class Foundation
+class Window
 {
 public:
-	Foundation();
-	~Foundation();
+	Window(int windowWidth, int windowHeight, const char* windowName);
+	~Window();
 
 	void SwapWindow();
 
