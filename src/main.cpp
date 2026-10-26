@@ -12,8 +12,7 @@ int main(int argc, char* argv[])
     bool quit = false;
     while (!quit)
     {
-        //do stuff
-
+        core->Update();
     }
 
     return 0;

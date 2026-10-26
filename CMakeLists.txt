@@ -98,8 +98,7 @@ add_library(imgui STATIC
     "${imgui_SOURCE_DIR}/imgui_tables.cpp"
     "${imgui_SOURCE_DIR}/imgui_widgets.cpp"
     "${imgui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp"
-    "${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp"
-)
+    "${imgui_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp")
 
 target_include_directories(imgui PUBLIC
     "${imgui_SOURCE_DIR}"
@@ -117,10 +116,20 @@ target_link_libraries(imgui PUBLIC
 
 add_executable(SCOOT-Engine
     src/main.cpp
+
  "src/Core/Core.h"
  "src/Core/Core.cpp"
+
  "src/Window/Window.h" 
- "src/Window/Window.cpp")
+ "src/Window/Window.cpp"
+ 
+ "src/Managers/Time/TimeManager.h" 
+ "src/Managers/Time/TimeManager.cpp"
+
+ "src/Managers/Time/Time.h" 
+ "src/Managers/Time/Time.cpp"
+
+)
 
 target_include_directories(SCOOT-Engine PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
