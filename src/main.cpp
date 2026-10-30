@@ -9,11 +9,10 @@ int main(int argc, char* argv[])
     
     auto core = std::make_unique<Core>();
 
-    bool quit = false;
-    while (!quit)
+    do
     {
         core->Update();
-    }
+    } while (!core->QuitProgram());
 
     return 0;
 }

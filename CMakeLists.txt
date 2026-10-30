@@ -129,6 +129,8 @@ add_executable(SCOOT-Engine
  "src/Managers/Time/Time.h" 
  "src/Managers/Time/Time.cpp"
 
+ "src/Managers/Event/EventManager.h"
+ "src/Managers/Event/EventManager.cpp"
 )
 
 target_include_directories(SCOOT-Engine PRIVATE

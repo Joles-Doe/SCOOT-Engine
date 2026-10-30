@@ -6,7 +6,7 @@ Core::Core()
 
 	timeManager = std::make_unique<TimeManager>();
 
-	// Init Input Manager
+	eventManager = std::make_unique<EventManager>();
 
 	// Init Camera Manager
 
@@ -30,7 +30,12 @@ void Core::Update()
 
 	timeManager->PreframeUpdate();
 
-	// process input
+	PollResponse pollEvents = eventManager->PollEvents();
+	if (pollEvents != PollResponse::CONTINUE)
+	{
+		// User has quit
+		quit = true;
+	}
 
 	timeManager->ProcessAccumulator();
 	while (timeManager->DoPhysicsUpdate())
@@ -45,4 +50,9 @@ void Core::Update()
 
 	// Going for an uncapped frame rate for the time being - subject to change
 	//timeManager->PostframeUpdate();
+}
+
+bool Core::QuitProgram()
+{
+	return quit;
 }
