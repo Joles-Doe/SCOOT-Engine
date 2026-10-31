@@ -6,7 +6,7 @@
 #include "Managers/Time/TimeManager.h"
 #include "Managers/Event/EventManager.h"
 
-class Core : public std::enable_shared_from_this<Core>
+class Core
 {
 public:
 	Core();

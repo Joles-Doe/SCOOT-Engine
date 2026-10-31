@@ -131,6 +131,9 @@ add_executable(SCOOT-Engine
 
  "src/Managers/Event/EventManager.h"
  "src/Managers/Event/EventManager.cpp"
+
+ "src/Managers/Event/Input.h"
+ "src/Managers/Event/Input.cpp"
 )
 
 target_include_directories(SCOOT-Engine PRIVATE

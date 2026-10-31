@@ -2,6 +2,9 @@
 
 #include <SDL.h>
 #include <cstring>
+#include <memory>
+
+#include "Input.h"
 
 enum class PollResponse
 {
@@ -12,13 +15,12 @@ enum class PollResponse
 class EventManager
 {
 public:
+	EventManager();
+	~EventManager();
+
 	PollResponse PollEvents();
 
-	bool KeyDown(SDL_Scancode key) const;
-	bool KeyUp(SDL_Scancode key) const;
-	bool KeyHeld(SDL_Scancode key) const;
-	bool KeyPressed(SDL_Scancode key) const;
+	std::shared_ptr<Input> GetInputModule();
 private:
-	Uint8 previousKeyboardState[SDL_NUM_SCANCODES]{ 0 };
-	Uint8 currentKeyboardState[SDL_NUM_SCANCODES]{ 0 };
+	std::shared_ptr<Input> inputModule;
 };

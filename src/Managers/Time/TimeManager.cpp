@@ -12,7 +12,7 @@ TimeManager::TimeManager()
 
 TimeManager::~TimeManager()
 {
-	timeModule = nullptr;
+	timeModule.reset();
 }
 
 std::shared_ptr<Time> TimeManager::GetTimeModule()

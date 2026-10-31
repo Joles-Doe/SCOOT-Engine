@@ -16,7 +16,7 @@ Core::Core()
 
 	// Init Scene Manager
 
-	auto test = this->weak_from_this();
+	//auto test = this->weak_from_this();
 }
 
 Core::~Core()

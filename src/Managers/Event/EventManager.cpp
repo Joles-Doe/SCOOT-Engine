@@ -1,5 +1,15 @@
 #include "EventManager.h"
 
+EventManager::EventManager()
+{
+    inputModule = std::make_shared<Input>();
+}
+
+EventManager::~EventManager()
+{
+    inputModule.reset();
+}
+
 PollResponse EventManager::PollEvents()
 {
     SDL_Event event;
@@ -11,33 +21,16 @@ PollResponse EventManager::PollEvents()
             // Early return if event is program quit
             return PollResponse::QUIT;
         }
-        
     }
     
-    std::memcpy(previousKeyboardState, currentKeyboardState, sizeof(currentKeyboardState));
-
+    std::memcpy(inputModule->previousKeyboardState, inputModule->currentKeyboardState, sizeof(inputModule->currentKeyboardState));
     const Uint8* state = SDL_GetKeyboardState(nullptr);
-    std::memcpy(currentKeyboardState, state, sizeof(currentKeyboardState));
+    std::memcpy(inputModule->currentKeyboardState, state, sizeof(inputModule->currentKeyboardState));
 
     return PollResponse::CONTINUE;
 }
 
-bool EventManager::KeyDown(SDL_Scancode key) const
+std::shared_ptr<Input> EventManager::GetInputModule()
 {
-    return currentKeyboardState[key];
-}
-
-bool EventManager::KeyUp(SDL_Scancode key) const
-{
-    return !currentKeyboardState[key] && previousKeyboardState[key];
-}
-
-bool EventManager::KeyHeld(SDL_Scancode key) const
-{
-    return currentKeyboardState[key] && previousKeyboardState[key];
-}
-
-bool EventManager::KeyPressed(SDL_Scancode key) const
-{
-    return currentKeyboardState[key] && !previousKeyboardState[key];
+    return inputModule;
 }
