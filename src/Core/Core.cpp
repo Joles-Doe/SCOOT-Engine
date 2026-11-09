@@ -2,19 +2,27 @@
 
 Core::Core()
 {
-	sdlWindow = std::make_unique<Window>(960, 540, "SCOOT-Engine");
+	sdlWindow = std::make_shared<Window>(960, 540, "SCOOT-Engine");
 
 	timeManager = std::make_unique<TimeManager>();
 
 	eventManager = std::make_unique<EventManager>();
 
-	// Init Camera Manager
+	renderManager = std::make_unique<RenderManager>(sdlWindow);
 
 	// Init Shader Manager
 
 	// Init Model Manager
 
 	// Init Scene Manager
+
+	// Init Camera Manager
+
+	// HUD Manager
+	
+	// Audio Manager
+
+	// Performance Manager (Optional)
 
 	//auto test = this->weak_from_this();
 }
@@ -47,6 +55,7 @@ void Core::Update()
 	// update
 
 	//rendering
+	renderManager->DrawObjects();
 
 	// Going for an uncapped frame rate for the time being - subject to change
 	//timeManager->PostframeUpdate();

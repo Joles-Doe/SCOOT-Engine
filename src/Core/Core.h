@@ -5,6 +5,7 @@
 #include "Window/Window.h"
 #include "Managers/Time/TimeManager.h"
 #include "Managers/Event/EventManager.h"
+#include "Managers/Render/RenderManager.h"
 
 class Core
 {
@@ -17,8 +18,9 @@ public:
 private:
 	bool quit{ false };
 
-	std::unique_ptr<Window> sdlWindow;
+	std::shared_ptr<Window> sdlWindow;
 	
 	std::unique_ptr<TimeManager> timeManager;
 	std::unique_ptr<EventManager> eventManager;
+	std::unique_ptr<RenderManager> renderManager;
 };

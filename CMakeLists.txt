@@ -134,6 +134,12 @@ add_executable(SCOOT-Engine
 
  "src/Managers/Event/Input.h"
  "src/Managers/Event/Input.cpp"
+
+ "src/Managers/Render/RenderManager.h"
+ "src/Managers/Render/RenderManager.cpp"
+
+ "src/Managers/Render/UniformStore/UniformStore.h"
+ "src/Managers/Render/UniformStore/UniformStore.cpp"
 )
 
 target_include_directories(SCOOT-Engine PRIVATE

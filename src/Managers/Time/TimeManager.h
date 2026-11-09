@@ -22,7 +22,7 @@ private:
 	std::shared_ptr<Time> timeModule;
 
 	double accumulator{ 0 };
-	double fixedDeltaTimeCap{ 1 / 60 };
+	double fixedDeltaTimeCap{ 1.0 / 60.0 };
 	double maxFrameTime{ 0.25 };
 
 	Uint64 performanceFrequency{ 0 };

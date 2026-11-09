@@ -14,5 +14,7 @@ int main(int argc, char* argv[])
         core->Update();
     } while (!core->QuitProgram());
 
+    std::cout << "End" << std::endl;
+
     return 0;
 }

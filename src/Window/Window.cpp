@@ -59,3 +59,12 @@ void Window::SwapWindow()
 {
     SDL_GL_SwapWindow(window);
 }
+
+std::pair<int, int> Window::GetSize()
+{
+    int width, height = 0;
+
+    SDL_GetWindowSize(window, &width, &height);
+
+    return std::pair<int, int>(width, height);
+}
