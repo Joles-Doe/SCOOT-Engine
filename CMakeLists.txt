@@ -138,8 +138,8 @@ add_executable(SCOOT-Engine
  "src/Managers/Render/RenderManager.h"
  "src/Managers/Render/RenderManager.cpp"
 
- "src/Managers/Render/UniformStore/UniformStore.h"
- "src/Managers/Render/UniformStore/UniformStore.cpp"
+ "src/Managers/Render/ResourceStore/ResourceStore.h"
+ "src/Managers/Render/ResourceStore/ResourceTypes.h"
 )
 
 target_include_directories(SCOOT-Engine PRIVATE

@@ -5,8 +5,8 @@ RenderManager::RenderManager(std::weak_ptr<Window> window)
 	engineWindow = window;
 
 	uniformStore = std::make_shared<UniformStore>();
-	uniformStore->AddUniform("uPerspectiveProjection");
-	uniformStore->AddUniform("uOrthographicProjection");
+	uniformStore->Set("uPerspectiveProjection", {});
+	uniformStore->Set("uOrthographicProjection", {});
 
 	if (std::shared_ptr<Window> sharedWin = engineWindow.lock())
 	{
@@ -15,8 +15,8 @@ RenderManager::RenderManager(std::weak_ptr<Window> window)
 		glm::mat4 perspectiveProj = glm::perspective(45.0f, ((float)windowSize.first, (float)windowSize.second), 0.1f, 100.0f);
 		glm::mat4 orthographicProj = glm::ortho(0.0f, (float)windowSize.first, (float)windowSize.second, 0.0f);
 
-		uniformStore->SetUniform("uPerspectiveProjection", perspectiveProj);
-		uniformStore->SetUniform("uOrthographicProjection", orthographicProj);
+		uniformStore->Set("uPerspectiveProjection", perspectiveProj);
+		uniformStore->Set("uOrthographicProjection", orthographicProj);
 	}
 
 }
@@ -44,17 +44,15 @@ void RenderManager::DrawObjects()
 			glm::mat4 perspectiveProj = glm::perspective(45.0f, ((float)windowSize.first, (float)windowSize.second), 0.1f, 100.0f);
 			glm::mat4 orthographicProj = glm::ortho(0.0f, (float)windowSize.first, (float)windowSize.second, 0.0f);
 
-			uniformStore->SetUniform("uPerspectiveProjection", perspectiveProj);
-			uniformStore->SetUniform("uOrthographicProjection", orthographicProj);
+			uniformStore->Set("uPerspectiveProjection", perspectiveProj);
+			uniformStore->Set("uOrthographicProjection", orthographicProj);
 		}
 	}
+
+	std::cout << (*uniformStore->Get<glm::mat4>("uOrthographicProjection"))[0][0] << std::endl;
 
 	// Iterate through each gameobject (how I pull them in I'll figure out)
 	// Check if GameObject has renderer module
 	// If true, pull necessary info from renderer module and draw using a generic shader
 	// Check renderer module for additional techniques i.e. shadows. Draw those here after the first shader
-
-	glm::mat4 test = uniformStore->GetUniform<glm::mat4>("uPerspectiveProjection");
-
-	std::cout << test[0][0] << std::endl;
 }

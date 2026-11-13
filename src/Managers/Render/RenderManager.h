@@ -6,7 +6,8 @@
 #include <glm/ext.hpp>
 
 #include "Window/Window.h"
-#include "UniformStore/UniformStore.h"
+//#include "UniformStore/UniformStore.h"
+#include "Managers/Render/ResourceStore/ResourceTypes.h"
 
 class RenderManager
 {
@@ -18,6 +19,8 @@ public:
 private:
 	std::weak_ptr<Window> engineWindow;
 	std::pair<int, int> windowSize;
+
+	//std::shared_ptr<UniformStore> uniformStore;
 
 	std::shared_ptr<UniformStore> uniformStore;
 };
