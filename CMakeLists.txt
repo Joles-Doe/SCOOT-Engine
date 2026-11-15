@@ -140,6 +140,9 @@ add_executable(SCOOT-Engine
 
  "src/Managers/Render/ResourceStore/ResourceStore.h"
  "src/Managers/Render/ResourceStore/ResourceTypes.h"
+
+ "src/Managers/Render/Shader/Shader.h"
+ "src/Managers/Render/Shader/Shader.cpp"
 )
 
 target_include_directories(SCOOT-Engine PRIVATE

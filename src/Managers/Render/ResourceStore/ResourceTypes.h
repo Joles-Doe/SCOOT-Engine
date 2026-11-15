@@ -1,6 +1,7 @@
 #include <glm/glm.hpp>
 
 #include "Managers/Render/ResourceStore/ResourceStore.h"
+#include "Managers/Render/Shader/Shader.h"
 
 using UniformStore = ResourceStore<
 	glm::mat4,
@@ -11,5 +12,5 @@ using UniformStore = ResourceStore<
 >;
 
 using ShaderStore = ResourceStore<
-	//ShaderProgram Object
+	Shader
 >;
