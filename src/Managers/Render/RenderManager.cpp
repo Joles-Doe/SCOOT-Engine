@@ -57,6 +57,28 @@ void RenderManager::DrawObjects()
 	// Check if GameObject has renderer module
 	// If true, pull necessary info from renderer module and draw using a generic shader
 	// Check renderer module for additional techniques i.e. shadows. Draw those here after the first shader
+
+	// for each gameobject
+	{
+		// if !gameobject.trygetcomponent(RENDERER) continue
+
+		{
+			/// DEFAULT SHADER
+
+			// activate shader 
+			glUseProgram(shaderStore->Get<Shader>("default")->ID());
+
+			// model shenanigans (bind vertex array, etc)
+			// texure shenanigans (bind texture)
+			// set generic uniforms (position, scale, rotation, texture etc)
+
+			// for each uniform (x) in default shader
+			for (std::string x : shaderStore->Get<Shader>("default")->GetUniformList())
+			{
+				shaderStore->Get<Shader>("default")->SetUniform(x, uniformStore->Get<float>(x)); // TO-DO: Change Get<float> to typecast
+			}
+		}
+	}
 }
 
 

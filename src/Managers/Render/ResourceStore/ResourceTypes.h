@@ -8,9 +8,11 @@ using UniformStore = ResourceStore<
 	glm::vec4,
 	glm::vec3,
 	glm::vec2,
-	float
+	float,
+	std::monostate
 >;
 
 using ShaderStore = ResourceStore<
-	Shader
+	Shader,
+	std::monostate
 >;
