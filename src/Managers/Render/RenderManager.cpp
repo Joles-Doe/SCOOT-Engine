@@ -53,15 +53,9 @@ void RenderManager::DrawObjects()
 
 	//std::cout << (*uniformStore->Get<glm::mat4>("uOrthographicProjection"))[0][0] << std::endl; //test
 
-	// Iterate through each gameobject (how I pull them in I'll figure out)
-	// Check if GameObject has renderer module
-	// If true, pull necessary info from renderer module and draw using a generic shader
-	// Check renderer module for additional techniques i.e. shadows. Draw those here after the first shader
-
 	// for each gameobject
 	{
 		// if !gameobject.trygetcomponent(RENDERER) continue
-
 		{
 			/// DEFAULT SHADER
 
@@ -75,7 +69,17 @@ void RenderManager::DrawObjects()
 			// for each uniform (x) in default shader
 			for (std::string x : shaderStore->Get<Shader>("default")->GetUniformList())
 			{
-				shaderStore->Get<Shader>("default")->SetUniform(x, uniformStore->Get<float>(x)); // TO-DO: Change Get<float> to typecast
+				auto* value = uniformStore->Get(x);
+				if (!value) continue;
+
+				std::visit([&](const auto& uniform)
+				{
+					using T = std::decay_t<decltype(uniform)>;
+					if constexpr (!std::is_same_v<T, std::monostate>)
+					{
+						shaderStore->Get<Shader>("default")->SetUniform(x, uniform);
+					}
+				}, *value);
 			}
 		}
 	}

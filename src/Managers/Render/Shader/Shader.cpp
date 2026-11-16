@@ -62,12 +62,39 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
 	glBindAttribLocation(id, 0, "aPosition");
 	glBindAttribLocation(id, 1, "aPixelColor");
 	glBindAttribLocation(id, 2, "aNormal");
+	glBindAttribLocation(id, 3, "aTexCoord");
 
 	glLinkProgram(id);
 	glGetProgramiv(id, GL_LINK_STATUS, &success);
 	if (!success)
 	{
 		throw std::runtime_error("Shader link error");
+	}
+
+	GLint uniformCount = 0;
+	GLint maxNameLength = 0;
+	glGetProgramiv(id, GL_ACTIVE_UNIFORMS, &uniformCount);
+	glGetProgramiv(id, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxNameLength);
+
+	std::vector<GLchar> nameBuffer(maxNameLength);
+
+	for (GLint i = 0; i < uniformCount; ++i)
+	{
+		GLsizei nameLength = 0;
+		GLint arraySize = 0;
+		GLenum type = 0;
+
+		glGetActiveUniform(
+			id,
+			static_cast<GLuint>(i),
+			maxNameLength,
+			&nameLength,
+			&arraySize,
+			&type,
+			nameBuffer.data()
+		);
+
+		uniforms.emplace_back(nameBuffer.data(), nameLength);
 	}
 
 	glDetachShader(id, vertexShaderID);
@@ -84,26 +111,74 @@ Shader::~Shader()
 	}
 }
 
+Shader::Shader(Shader&& other) noexcept
+	: id(std::exchange(other.id, 0)),
+	  uniforms(std::move(other.uniforms))
+{
+}
+
+Shader& Shader::operator=(Shader&& other) noexcept
+{
+	if (this != &other)
+	{
+		if (id)
+		{
+			glDeleteProgram(id);
+		}
+
+		id = std::exchange(other.id, 0);
+		uniforms = std::move(other.uniforms);
+	}
+
+	return *this;
+}
+
 GLuint Shader::ID()
 {
 	return id;
+}
+
+void Shader::SetUniform(const std::string& name, const glm::mat4& value)
+{
+	GLint location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) return;
+
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void Shader::SetUniform(const std::string& name, const glm::vec4& value)
+{
+	GLint location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) return;
+
+	glUniform4fv(location, 1, glm::value_ptr(value));
+}
+
+void Shader::SetUniform(const std::string& name, const glm::vec3& value)
+{
+	GLint location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) return;
+
+	glUniform3fv(location, 1, glm::value_ptr(value));
+}
+
+void Shader::SetUniform(const std::string& name, const glm::vec2& value)
+{
+	GLint location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) return;
+
+	glUniform2fv(location, 1, glm::value_ptr(value));
+}
+
+void Shader::SetUniform(const std::string& name, float value)
+{
+	GLint location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) return;
+
+	glUniform1f(location, value);
 }
 
 std::vector<std::string>& Shader::GetUniformList()
 {
 	return uniforms;
 }
-
-/*
-TO-DO
-Initialize shader
-
-Identify Attributes
-Identify Uniforms
-(Could store this in a separate file and read from it?)
-
-That way, when shader is called to draw
--> Check what uniforms shader uses
--> Use a set function to iterate through each uniform (communicate with uniform store)
-
-*/
