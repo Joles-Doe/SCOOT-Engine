@@ -143,6 +143,11 @@ add_executable(SCOOT-Engine
 
  "src/Managers/Render/Shader/Shader.h"
  "src/Managers/Render/Shader/Shader.cpp"
+
+ "src/Object/Object.h"
+ "src/Object/Object.cpp"
+
+ "src/Object/Components/Base/Component.h"
 )
 
 target_include_directories(SCOOT-Engine PRIVATE
