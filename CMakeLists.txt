@@ -148,6 +148,10 @@ add_executable(SCOOT-Engine
  "src/Object/Object.cpp"
 
  "src/Object/Components/Base/Component.h"
+
+ "src/Object/Components/Transform/Transform.h"
+
+ "src/Object/Components/Collider/Collider.h"
 )
 
 target_include_directories(SCOOT-Engine PRIVATE
