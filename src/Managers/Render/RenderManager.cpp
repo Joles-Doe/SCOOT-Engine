@@ -55,16 +55,26 @@ void RenderManager::DrawObjects()
 
 	// for each gameobject
 	{
-		// if !gameobject.trygetcomponent(RENDERER) continue
+		// if !object.TryGetComponent<Renderer>() continue
 		{
+			//Renderer objectRenderComponent = object.TryGetComponent<Renderer>();
+
+			/*auto model = modelStore->Get<Model>(objectRenderComponent.GetModelName();
+			if (!model)
+			{
+				modelStore->Set(objectRenderComponent.GetModelName(), Model(objectRenderComponent.GetModelName()));
+				model = modelStore->Get<Model>(objectRenderComponent.GetModelName();
+			}
+			glBindVertexArray(model.ID());*/
+
+			// texure shenanigans (bind texture)
+			// set generic uniforms (position, scale, rotation, texture etc)
+
+
 			/// DEFAULT SHADER
 
 			// activate shader 
 			glUseProgram(shaderStore->Get<Shader>("default")->ID());
-
-			// model shenanigans (bind vertex array, etc)
-			// texure shenanigans (bind texture)
-			// set generic uniforms (position, scale, rotation, texture etc)
 
 			// for each uniform (x) in default shader
 			for (std::string x : shaderStore->Get<Shader>("default")->GetUniformList())
@@ -119,3 +129,37 @@ std::shared_ptr<ShaderStore> RenderManager::CompileShaders()
 
 	return store;
 }
+
+/*
+Models and Textures
+
+Assets/Models/
+
+Assets/Textures/
+
+Each have their own loaders, and set into separate stores (ModelStore, TextureStore, yada yada,)
+When it comes to initializing the renderer component in a object, take two args: model name and texture name (I'll do the same concept as the shader compiling and use the name of the directory as the key)
+
+Issue is, we don't want to compile all of the models like we do with the shaders.
+Instead of compiling every model at runtime do a check to see if the model has already been compiled:
+
+object.AddComponent<Renderer>("TestModel", "TestTexture")
+modelKEY = object.TryGetComponent<Renderer>().GetModelName;
+if ModelStore[modelKEY] exists
+{
+  Use existing, compiled model
+}
+else
+{
+  Load model //can worry about optimization later
+}
+
+Instead of using the FILE NAME as the key, we'll use the FOLDER NAME as the key instead.
+Obviously same concept as before, just a little different where:
+
+Model::LoadModel(string name)
+{
+path = "assets/models/" + name + "/" + name + ".obj"
+}
+
+*/
