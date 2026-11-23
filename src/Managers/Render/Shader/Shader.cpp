@@ -60,9 +60,8 @@ Shader::Shader(std::string vertexPath, std::string fragmentPath)
 	glAttachShader(id, fragmentShaderID);
 
 	glBindAttribLocation(id, 0, "aPosition");
-	glBindAttribLocation(id, 1, "aPixelColor");
+	glBindAttribLocation(id, 1, "aTexCoord");
 	glBindAttribLocation(id, 2, "aNormal");
-	glBindAttribLocation(id, 3, "aTexCoord");
 
 	glLinkProgram(id);
 	glGetProgramiv(id, GL_LINK_STATUS, &success);

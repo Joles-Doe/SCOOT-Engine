@@ -10,8 +10,7 @@
 
 Model::Model(const std::string& name) : modelName(name)
 {
-    const std::filesystem::path modelDirectory =
-        std::filesystem::path("assets/models") / name;
+    const std::filesystem::path modelDirectory = std::filesystem::path("assets/models") / name;
     const char* extensions[] = {
         ".obj", ".fbx", ".gltf", ".glb", ".dae", ".stl", ".ply", ".3ds"
     };
