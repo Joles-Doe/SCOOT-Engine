@@ -76,6 +76,25 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(GLM)
 
 # --------------------------------------------------
+# Assimp
+# --------------------------------------------------
+
+set(BUILD_SHARED_LIBS OFF)
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG v6.0.6
+    GIT_SHALLOW TRUE
+)
+
+FetchContent_MakeAvailable(assimp)
+
+# --------------------------------------------------
 # Dear ImGui
 # --------------------------------------------------
 
@@ -143,6 +162,9 @@ add_executable(SCOOT-Engine
 
  "src/Managers/Render/Shader/Shader.h"
  "src/Managers/Render/Shader/Shader.cpp"
+
+ "src/Managers/Render/Model/Model.h"
+ "src/Managers/Render/Model/Model.cpp"
 
  "src/Object/Object.h"
  "src/Object/Object.cpp"
@@ -255,4 +277,5 @@ target_link_libraries(SCOOT-Engine PRIVATE
     OpenGL::GL
     glm::glm
     imgui
+    assimp
 )
