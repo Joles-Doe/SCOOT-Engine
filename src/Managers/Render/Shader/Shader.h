@@ -30,6 +30,7 @@ public:
 	void SetUniform(const std::string& name, const glm::vec3& value);
 	void SetUniform(const std::string& name, const glm::vec2& value);
 	void SetUniform(const std::string& name, float value);
+	void SetUniform(const std::string& name, int value);
 private:
 	GLuint id{};
 

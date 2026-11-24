@@ -4,10 +4,6 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 
-#include <cstddef>
-#include <filesystem>
-#include <stdexcept>
-
 Model::Model(const std::string& name) : modelName(name)
 {
     const std::filesystem::path modelDirectory = std::filesystem::path("assets/models") / name;
@@ -45,6 +41,38 @@ Model::~Model()
 
     if (vao != 0)
         glDeleteVertexArrays(1, &vao);
+}
+
+Model::Model(Model&& other) noexcept
+    : modelName(std::move(other.modelName)),
+      vertices(std::move(other.vertices)),
+      indices(std::move(other.indices)),
+      vao(std::exchange(other.vao, 0)),
+      vbo(std::exchange(other.vbo, 0)),
+      ebo(std::exchange(other.ebo, 0))
+{
+}
+
+Model& Model::operator=(Model&& other) noexcept
+{
+    if (this != &other)
+    {
+        if (ebo != 0)
+            glDeleteBuffers(1, &ebo);
+        if (vbo != 0)
+            glDeleteBuffers(1, &vbo);
+        if (vao != 0)
+            glDeleteVertexArrays(1, &vao);
+
+        modelName = std::move(other.modelName);
+        vertices = std::move(other.vertices);
+        indices = std::move(other.indices);
+        vao = std::exchange(other.vao, 0);
+        vbo = std::exchange(other.vbo, 0);
+        ebo = std::exchange(other.ebo, 0);
+    }
+
+    return *this;
 }
 
 void Model::LoadModel(const std::string& path)
@@ -194,5 +222,6 @@ std::size_t Model::GetIndexCount() const
 
 void Model::Bind() const
 {
+
     glBindVertexArray(vao);
 }

@@ -177,6 +177,14 @@ void Shader::SetUniform(const std::string& name, float value)
 	glUniform1f(location, value);
 }
 
+void Shader::SetUniform(const std::string& name, int value)
+{
+	GLint location = glGetUniformLocation(id, name.c_str());
+	if (location == -1) return;
+
+	glUniform1i(location, value);
+}
+
 std::vector<std::string>& Shader::GetUniformList()
 {
 	return uniforms;

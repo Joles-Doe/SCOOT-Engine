@@ -4,6 +4,10 @@
 #include <glm/glm.hpp>
 #include <string>
 #include <vector>
+#include <cstddef>
+#include <filesystem>
+#include <stdexcept>
+#include <utility>
 
 struct Vertex
 {
@@ -17,6 +21,11 @@ class Model
 public:
 	Model(const std::string& name);
 	~Model();
+
+	Model(const Model&) = delete;
+	Model& operator=(const Model&) = delete;
+	Model(Model&& other) noexcept;
+	Model& operator=(Model&& other) noexcept;
 
 	std::size_t GetVertexCount() const;
 	std::size_t GetIndexCount() const;

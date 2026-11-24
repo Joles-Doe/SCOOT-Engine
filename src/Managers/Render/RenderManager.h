@@ -4,11 +4,17 @@
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <cstddef>
 #include <filesystem>
 
 #include "Window/Window.h"
 #include "Managers/Render/ResourceStore/ResourceTypes.h"
 #include "Managers/Render/Shader/Shader.h"
+
+#include "Object/Object.h"
+#include "Object/Components/Base/Component.h"
+#include "Object/Components/Transform/Transform.h"
+#include "Object/Components/Renderer/Renderer.h"
 
 class RenderManager
 {
@@ -25,4 +31,9 @@ private:
 
 	std::shared_ptr<UniformStore> uniformStore;
 	std::shared_ptr<ShaderStore> shaderStore;
+	std::shared_ptr<ModelStore> modelStore;
+	std::shared_ptr<TextureStore> textureStore;
+
+	
+	float testRot{ 0.0f };
 };

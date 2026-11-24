@@ -6,20 +6,31 @@ RenderManager::RenderManager(std::weak_ptr<Window> window)
 
 	shaderStore = CompileShaders();
 
+	modelStore = std::make_shared<ModelStore>();
+
+	textureStore = std::make_shared<TextureStore>();
+
 	uniformStore = std::make_shared<UniformStore>();
 	uniformStore->Set("uPerspectiveProjection", {});
 	uniformStore->Set("uOrthographicProjection", {});
+	uniformStore->Set("uTexture", 0);
 
 	if (std::shared_ptr<Window> sharedWin = engineWindow.lock())
 	{
 		windowSize = sharedWin->GetSize();
 
-		glm::mat4 perspectiveProj = glm::perspective(45.0f, ((float)windowSize.first, (float)windowSize.second), 0.1f, 100.0f);
+		glViewport(0, 0, windowSize.first, windowSize.second);
+		const float aspectRatio = static_cast<float>(windowSize.first) / static_cast<float>(windowSize.second);
+		glm::mat4 perspectiveProj = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
 		glm::mat4 orthographicProj = glm::ortho(0.0f, (float)windowSize.first, (float)windowSize.second, 0.0f);
 
 		uniformStore->Set("uPerspectiveProjection", perspectiveProj);
 		uniformStore->Set("uOrthographicProjection", orthographicProj);
 	}
+
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glDisable(GL_BLEND);
 
 }
 
@@ -43,7 +54,9 @@ void RenderManager::DrawObjects()
 		{
 			windowSize = currentSize;
 
-			glm::mat4 perspectiveProj = glm::perspective(45.0f, ((float)windowSize.first, (float)windowSize.second), 0.1f, 100.0f);
+			glViewport(0, 0, windowSize.first, windowSize.second);
+			const float aspectRatio = static_cast<float>(windowSize.first) / static_cast<float>(windowSize.second);
+			glm::mat4 perspectiveProj = glm::perspective(glm::radians(45.0f), aspectRatio, 0.1f, 100.0f);
 			glm::mat4 orthographicProj = glm::ortho(0.0f, (float)windowSize.first, (float)windowSize.second, 0.0f);
 
 			uniformStore->Set("uPerspectiveProjection", perspectiveProj);
@@ -54,22 +67,48 @@ void RenderManager::DrawObjects()
 	//std::cout << (*uniformStore->Get<glm::mat4>("uOrthographicProjection"))[0][0] << std::endl; //test
 
 	// for each gameobject
+	//test
+	Object testGameObject = Object();
+	testGameObject.AddComponent<Transform>();
+	testGameObject.AddComponent<Renderer>("curuthers", "curuthers");
 	{
-		// if !object.TryGetComponent<Renderer>() continue
+		//if (!object.TryGetComponent<Renderer>()) continue;
 		{
-			//Renderer objectRenderComponent = object.TryGetComponent<Renderer>();
+			Renderer objectRenderComponent = *testGameObject.TryGetComponent<Renderer>();
 
-			/*auto model = modelStore->Get<Model>(objectRenderComponent.GetModelName();
+			auto model = modelStore->Get<Model>(objectRenderComponent.modelName);
 			if (!model)
 			{
-				modelStore->Set(objectRenderComponent.GetModelName(), Model(objectRenderComponent.GetModelName()));
-				model = modelStore->Get<Model>(objectRenderComponent.GetModelName();
+				modelStore->Set(objectRenderComponent.modelName, Model(objectRenderComponent.modelName));
+				model = modelStore->Get<Model>(objectRenderComponent.modelName);
 			}
-			glBindVertexArray(model.ID());*/
+			model->Bind();
 
-			// texure shenanigans (bind texture)
+			auto texture = textureStore->Get<Texture>(objectRenderComponent.textureName);
+			if (!texture)
+			{
+				textureStore->Set(objectRenderComponent.textureName, Texture(objectRenderComponent.textureName));
+				texture = textureStore->Get<Texture>(objectRenderComponent.textureName);
+			}
+			texture->Bind();
+			
 			// set generic uniforms (position, scale, rotation, texture etc)
+			Transform objectTransform = *testGameObject.TryGetComponent<Transform>();
 
+			objectTransform.rotation.y = testRot;
+			testRot += 0.01f;
+			if (testRot >= 360.0f) testRot = 0;
+
+			glm::mat4 transformModel = glm::mat4(1.0f);
+			transformModel = glm::translate(transformModel, objectTransform.position);
+			transformModel = glm::rotate(transformModel, glm::radians(objectTransform.rotation.x), glm::vec3(1, 0, 0));
+			transformModel = glm::rotate(transformModel, glm::radians(objectTransform.rotation.y), glm::vec3(0, 1, 0));
+			transformModel = glm::rotate(transformModel, glm::radians(objectTransform.rotation.z), glm::vec3(0, 0, 1));
+			transformModel = glm::scale(transformModel, objectTransform.scale);
+			uniformStore->Set("uModel", transformModel);
+
+			glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+			uniformStore->Set("uView", view);
 
 			/// DEFAULT SHADER
 
@@ -91,6 +130,16 @@ void RenderManager::DrawObjects()
 					}
 				}, *value);
 			}
+
+			// Draw shape
+			glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(model->GetIndexCount()), GL_UNSIGNED_INT, nullptr);
+
+			// Reset the state
+			glBindVertexArray(0);
+			glBindTexture(GL_TEXTURE_2D, 0);
+
+			engineWindow.lock()->SwapWindow();
+			glUseProgram(0);
 		}
 	}
 }

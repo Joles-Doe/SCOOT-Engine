@@ -76,6 +76,23 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(GLM)
 
 # --------------------------------------------------
+# stb
+# --------------------------------------------------
+
+FetchContent_Declare(
+    stb
+    GIT_REPOSITORY https://github.com/nothings/stb.git
+    GIT_TAG master
+    GIT_SHALLOW TRUE
+)
+
+FetchContent_GetProperties(stb)
+
+if(NOT stb_POPULATED)
+    FetchContent_Populate(stb)
+endif()
+
+# --------------------------------------------------
 # Assimp
 # --------------------------------------------------
 
@@ -166,10 +183,15 @@ add_executable(SCOOT-Engine
  "src/Managers/Render/Model/Model.h"
  "src/Managers/Render/Model/Model.cpp"
 
+ "src/Managers/Render/Texture/Texture.h"
+ "src/Managers/Render/Texture/Texture.cpp"
+
  "src/Object/Object.h"
  "src/Object/Object.cpp"
 
  "src/Object/Components/Base/Component.h"
+
+ "src/Object/Components/Renderer/Renderer.h"
 
  "src/Object/Components/Transform/Transform.h"
 
@@ -178,6 +200,7 @@ add_executable(SCOOT-Engine
 
 target_include_directories(SCOOT-Engine PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    "${stb_SOURCE_DIR}"
 )
 
 add_custom_command(TARGET SCOOT-Engine POST_BUILD
