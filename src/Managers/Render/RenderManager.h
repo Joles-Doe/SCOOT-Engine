@@ -6,6 +6,8 @@
 #include <glm/ext.hpp>
 #include <cstddef>
 #include <filesystem>
+#include <memory>
+#include <vector>
 
 #include "Window/Window.h"
 #include "Managers/Render/ResourceStore/ResourceTypes.h"
@@ -22,7 +24,7 @@ public:
 	RenderManager(std::weak_ptr<Window> window);
 	~RenderManager();
 
-	void DrawObjects();
+	void DrawObjects(const std::vector<std::shared_ptr<Object>>& objects);
 private:
 	std::weak_ptr<Window> engineWindow;
 	std::pair<int, int> windowSize;
@@ -33,7 +35,4 @@ private:
 	std::shared_ptr<ShaderStore> shaderStore;
 	std::shared_ptr<ModelStore> modelStore;
 	std::shared_ptr<TextureStore> textureStore;
-
-	
-	float testRot{ 0.0f };
 };

@@ -39,7 +39,7 @@ RenderManager::~RenderManager()
 
 }
 
-void RenderManager::DrawObjects()
+void RenderManager::DrawObjects(const std::vector<std::shared_ptr<Object>>& objects)
 {
 	// Clear Buffers
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -66,15 +66,11 @@ void RenderManager::DrawObjects()
 
 	//std::cout << (*uniformStore->Get<glm::mat4>("uOrthographicProjection"))[0][0] << std::endl; //test
 
-	// for each gameobject
-	//test
-	Object testGameObject = Object();
-	testGameObject.AddComponent<Transform>();
-	testGameObject.AddComponent<Renderer>("curuthers", "curuthers");
+	for (const auto& obj : objects)
 	{
-		//if (!object.TryGetComponent<Renderer>()) continue;
+		if (!obj || !obj->TryGetComponent<Renderer>()) continue;
 		{
-			Renderer objectRenderComponent = *testGameObject.TryGetComponent<Renderer>();
+			Renderer objectRenderComponent = *obj->TryGetComponent<Renderer>();
 
 			auto model = modelStore->Get<Model>(objectRenderComponent.modelName);
 			if (!model)
@@ -93,11 +89,7 @@ void RenderManager::DrawObjects()
 			texture->Bind();
 			
 			// set generic uniforms (position, scale, rotation, texture etc)
-			Transform objectTransform = *testGameObject.TryGetComponent<Transform>();
-
-			objectTransform.rotation.y = testRot;
-			testRot += 0.01f;
-			if (testRot >= 360.0f) testRot = 0;
+			Transform objectTransform = *obj->TryGetComponent<Transform>();
 
 			glm::mat4 transformModel = glm::mat4(1.0f);
 			transformModel = glm::translate(transformModel, objectTransform.position);

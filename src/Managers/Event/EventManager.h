@@ -4,7 +4,7 @@
 #include <cstring>
 #include <memory>
 
-#include "Input.h"
+#include "InputModule.h"
 
 enum class PollResponse
 {
@@ -20,7 +20,7 @@ public:
 
 	PollResponse PollEvents();
 
-	std::shared_ptr<Input> GetInputModule();
+	std::shared_ptr<InputModule> GetInputModule();
 private:
-	std::shared_ptr<Input> inputModule;
+	std::shared_ptr<InputModule> inputModule;
 };

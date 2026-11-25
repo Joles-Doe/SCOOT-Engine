@@ -5,7 +5,7 @@
 
 class EventManager;
 
-class Input
+class InputModule
 {
 public:
 	bool KeyDown(SDL_Scancode key) const;

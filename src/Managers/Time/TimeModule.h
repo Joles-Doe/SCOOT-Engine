@@ -4,7 +4,7 @@
 
 class TimeManager;
 
-class Time
+class TimeModule
 {
 public:
 	float DeltaTime();

@@ -2,7 +2,7 @@
 
 EventManager::EventManager()
 {
-    inputModule = std::make_shared<Input>();
+    inputModule = std::make_shared<InputModule>();
 }
 
 EventManager::~EventManager()
@@ -30,7 +30,7 @@ PollResponse EventManager::PollEvents()
     return PollResponse::CONTINUE;
 }
 
-std::shared_ptr<Input> EventManager::GetInputModule()
+std::shared_ptr<InputModule> EventManager::GetInputModule()
 {
     return inputModule;
 }

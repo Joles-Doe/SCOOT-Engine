@@ -162,14 +162,14 @@ add_executable(SCOOT-Engine
  "src/Managers/Time/TimeManager.h" 
  "src/Managers/Time/TimeManager.cpp"
 
- "src/Managers/Time/Time.h" 
- "src/Managers/Time/Time.cpp"
+ "src/Managers/Time/TimeModule.h" 
+ "src/Managers/Time/TimeModule.cpp"
 
  "src/Managers/Event/EventManager.h"
  "src/Managers/Event/EventManager.cpp"
 
- "src/Managers/Event/Input.h"
- "src/Managers/Event/Input.cpp"
+ "src/Managers/Event/InputModule.h"
+ "src/Managers/Event/InputModule.cpp"
 
  "src/Managers/Render/RenderManager.h"
  "src/Managers/Render/RenderManager.cpp"
@@ -186,6 +186,14 @@ add_executable(SCOOT-Engine
  "src/Managers/Render/Texture/Texture.h"
  "src/Managers/Render/Texture/Texture.cpp"
 
+ "src/Scene/SceneManager/SceneManager.h"
+ "src/Scene/SceneManager/SceneManager.cpp"
+
+ "src/Scene/SceneIDs.h"
+
+ "src/Scene/BaseScene/Scene.h"
+ "src/Scene/BaseScene/Scene.cpp"
+
  "src/Object/Object.h"
  "src/Object/Object.cpp"
 
@@ -196,6 +204,17 @@ add_executable(SCOOT-Engine
  "src/Object/Components/Transform/Transform.h"
 
  "src/Object/Components/Collider/Collider.h"
+
+ "src/Object/Components/Time/Time.h"
+
+ "src/Object/Components/Input/Input.h"
+
+
+ "src/Scene/CustomScenes/TestScene/TestScene.h"
+ "src/Scene/CustomScenes/TestScene/TestScene.cpp"
+
+ "src/Object/CustomObjects/TestObject/TestObject.h"
+ "src/Object/CustomObjects/TestObject/TestObject.cpp"
 )
 
 target_include_directories(SCOOT-Engine PRIVATE

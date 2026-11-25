@@ -10,19 +10,13 @@ Core::Core()
 
 	renderManager = std::make_unique<RenderManager>(sdlWindow);
 
-	// Init Shader Manager
-
-	// Init Model Manager
-
-	// Init Scene Manager
+	sceneManager = std::make_unique<SceneManager>(timeManager->GetTimeModule(), eventManager->GetInputModule());
 
 	// Init Camera Manager
 
 	// HUD Manager
 	
 	// Audio Manager
-
-	// Performance Manager (Optional)
 
 	//auto test = this->weak_from_this();
 }
@@ -34,8 +28,6 @@ Core::~Core()
 
 void Core::Update()
 {
-	// core stuff
-
 	timeManager->PreframeUpdate();
 
 	PollResponse pollEvents = eventManager->PollEvents();
@@ -52,10 +44,10 @@ void Core::Update()
 		timeManager->SubtractAccumulator();
 	}
 
-	// update
+	sceneManager->UpdateObjects();
 
 	//rendering
-	renderManager->DrawObjects();
+	renderManager->DrawObjects(sceneManager->GetObjects());
 
 	// Going for an uncapped frame rate for the time being - subject to change
 	//timeManager->PostframeUpdate();

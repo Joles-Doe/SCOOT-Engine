@@ -1,21 +1,21 @@
-#include "Input.h"
+#include "InputModule.h"
 
-bool Input::KeyDown(SDL_Scancode key) const
+bool InputModule::KeyDown(SDL_Scancode key) const
 {
     return currentKeyboardState[key];
 }
 
-bool Input::KeyUp(SDL_Scancode key) const
+bool InputModule::KeyUp(SDL_Scancode key) const
 {
     return !currentKeyboardState[key] && previousKeyboardState[key];
 }
 
-bool Input::KeyHeld(SDL_Scancode key) const
+bool InputModule::KeyHeld(SDL_Scancode key) const
 {
     return currentKeyboardState[key] && previousKeyboardState[key];
 }
 
-bool Input::KeyPressed(SDL_Scancode key) const
+bool InputModule::KeyPressed(SDL_Scancode key) const
 {
     return currentKeyboardState[key] && !previousKeyboardState[key];
 }

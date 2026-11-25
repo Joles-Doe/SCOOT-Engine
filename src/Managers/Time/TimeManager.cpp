@@ -2,7 +2,7 @@
 
 TimeManager::TimeManager()
 {
-	timeModule = std::make_shared<Time>();
+	timeModule = std::make_shared<TimeModule>();
 
 	performanceFrequency = SDL_GetPerformanceFrequency();
 	previousCounter = SDL_GetPerformanceCounter();
@@ -15,7 +15,7 @@ TimeManager::~TimeManager()
 	timeModule.reset();
 }
 
-std::shared_ptr<Time> TimeManager::GetTimeModule()
+std::shared_ptr<TimeModule> TimeManager::GetTimeModule()
 {
 	return timeModule;
 }

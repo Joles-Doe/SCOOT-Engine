@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <memory>
 
-#include "Time.h"
+#include "TimeModule.h"
 
 class TimeManager
 {
@@ -11,7 +11,7 @@ public:
 	TimeManager();
 	~TimeManager();
 
-	std::shared_ptr<Time> GetTimeModule();
+	std::shared_ptr<TimeModule> GetTimeModule();
 
 	void PreframeUpdate();
 	void ProcessAccumulator();
@@ -19,7 +19,7 @@ public:
 
 	bool DoPhysicsUpdate();
 private:
-	std::shared_ptr<Time> timeModule;
+	std::shared_ptr<TimeModule> timeModule;
 
 	double accumulator{ 0 };
 	double fixedDeltaTimeCap{ 1.0 / 60.0 };
