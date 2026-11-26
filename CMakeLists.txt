@@ -209,6 +209,8 @@ add_executable(SCOOT-Engine
 
  "src/Object/Components/Input/Input.h"
 
+ "src/Object/Components/Light/Light.h"
+
 
  "src/Scene/CustomScenes/TestScene/TestScene.h"
  "src/Scene/CustomScenes/TestScene/TestScene.cpp"

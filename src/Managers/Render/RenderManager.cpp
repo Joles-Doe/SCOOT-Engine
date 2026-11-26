@@ -64,7 +64,19 @@ void RenderManager::DrawObjects(const std::vector<std::shared_ptr<Object>>& obje
 		}
 	}
 
-	//std::cout << (*uniformStore->Get<glm::mat4>("uOrthographicProjection"))[0][0] << std::endl; //test
+	std::vector<LightData> lights;
+	lights.reserve(objects.size());
+	for (const auto& obj : objects)
+	{
+		if (!obj) continue;
+		
+		auto* light = obj->TryGetComponent<Light>();
+		auto* transform = obj->TryGetComponent<Transform>();
+		if (!light || !transform) continue;
+
+		lights.push_back({ *light, *transform });
+
+	}
 
 	for (const auto& obj : objects)
 	{

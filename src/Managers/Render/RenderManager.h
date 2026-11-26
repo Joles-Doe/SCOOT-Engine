@@ -17,6 +17,7 @@
 #include "Object/Components/Base/Component.h"
 #include "Object/Components/Transform/Transform.h"
 #include "Object/Components/Renderer/Renderer.h"
+#include "Object/Components/Light/Light.h"
 
 class RenderManager
 {
@@ -35,4 +36,10 @@ private:
 	std::shared_ptr<ShaderStore> shaderStore;
 	std::shared_ptr<ModelStore> modelStore;
 	std::shared_ptr<TextureStore> textureStore;
+
+	struct LightData
+	{
+		Light light;
+		Transform transform;
+	};
 };
