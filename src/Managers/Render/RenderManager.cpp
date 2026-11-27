@@ -64,6 +64,11 @@ void RenderManager::DrawObjects(const std::vector<std::shared_ptr<Object>>& obje
 		}
 	}
 
+	// Upload Camera related uniforms
+	glm::vec3 cameraPosition = glm::vec3(0.0f, 0.0f, -10.0f);
+	/// NOTE - Since I don't have a camera object yet I'm manually defining the position. When making a camera object, fix this
+	uniformStore->Set("uCameraPosition", glm::vec3(0.0f, 0.0f, 10.0f));
+
 	std::vector<LightData> lights;
 	lights.reserve(objects.size());
 	for (const auto& obj : objects)
@@ -111,16 +116,40 @@ void RenderManager::DrawObjects(const std::vector<std::shared_ptr<Object>>& obje
 			transformModel = glm::scale(transformModel, objectTransform.scale);
 			uniformStore->Set("uModel", transformModel);
 
-			glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -10.0f));
+			glm::mat4 view = glm::translate(glm::mat4(1.0f), cameraPosition);
 			uniformStore->Set("uView", view);
 
 			/// DEFAULT SHADER
+			Shader* shader = shaderStore->Get<Shader>("defaultLight");
 
 			// activate shader 
-			glUseProgram(shaderStore->Get<Shader>("default")->ID());
+			glUseProgram(shader->ID());
+			
+			// get lights that affect object
+			const std::vector<const LightData*> affectingLights = GetLightsForObject(lights, objectTransform.position);
+
+			// upload light specific information directly to shader - keeping this in uniform store is memory heavy
+			const int lightCount = static_cast<int>(affectingLights.size());
+			shader->SetUniform("uLightCount", lightCount);
+			for (int i = 0; i < lightCount; ++i)
+			{
+				const LightData& data = *affectingLights[i];
+				const std::string prefix = "uLights[" + std::to_string(i) + "].";
+
+				shader->SetUniform(prefix + "position", data.transform.position);
+				shader->SetUniform(prefix + "color", data.light.color);
+				shader->SetUniform(prefix + "intensity", data.light.intensity);
+				shader->SetUniform(prefix + "range", data.light.range);
+			}
+
+			// upload renderer specific information to uniform store
+			uniformStore->Set("uBaseColor", objectRenderComponent.baseColor);
+			uniformStore->Set("uSpecularColor", objectRenderComponent.specularColor);
+			uniformStore->Set("uSpecularStrength", objectRenderComponent.specularStrength);
+			uniformStore->Set("uShininess", objectRenderComponent.shininess);
 
 			// for each uniform (x) in default shader
-			for (std::string x : shaderStore->Get<Shader>("default")->GetUniformList())
+			for (std::string x : shader->GetUniformList())
 			{
 				auto* value = uniformStore->Get(x);
 				if (!value) continue;
@@ -130,7 +159,7 @@ void RenderManager::DrawObjects(const std::vector<std::shared_ptr<Object>>& obje
 					using T = std::decay_t<decltype(uniform)>;
 					if constexpr (!std::is_same_v<T, std::monostate>)
 					{
-						shaderStore->Get<Shader>("default")->SetUniform(x, uniform);
+						shader->SetUniform(x, uniform);
 					}
 				}, *value);
 			}
@@ -183,36 +212,43 @@ std::shared_ptr<ShaderStore> RenderManager::CompileShaders()
 	return store;
 }
 
-/*
-Models and Textures
-
-Assets/Models/
-
-Assets/Textures/
-
-Each have their own loaders, and set into separate stores (ModelStore, TextureStore, yada yada,)
-When it comes to initializing the renderer component in a object, take two args: model name and texture name (I'll do the same concept as the shader compiling and use the name of the directory as the key)
-
-Issue is, we don't want to compile all of the models like we do with the shaders.
-Instead of compiling every model at runtime do a check to see if the model has already been compiled:
-
-object.AddComponent<Renderer>("TestModel", "TestTexture")
-modelKEY = object.TryGetComponent<Renderer>().GetModelName;
-if ModelStore[modelKEY] exists
+std::vector<const LightData*> RenderManager::GetLightsForObject(const std::vector<LightData>& lights, const glm::vec3& objectPosition) const
 {
-  Use existing, compiled model
-}
-else
-{
-  Load model //can worry about optimization later
-}
+	std::vector<std::pair<float, const LightData*>> rankedLights;
+	rankedLights.reserve(lights.size());
 
-Instead of using the FILE NAME as the key, we'll use the FOLDER NAME as the key instead.
-Obviously same concept as before, just a little different where:
+	for (const LightData& lightData : lights)
+	{
+		const glm::vec3 offset = lightData.transform.position - objectPosition;
+		const float distanceSquared = glm::dot(offset, offset);
+		const float rangeSquared = lightData.light.range * lightData.light.range;
 
-Model::LoadModel(string name)
-{
-path = "assets/models/" + name + "/" + name + ".obj"
+		if (distanceSquared > rangeSquared) continue;
+
+		const float distance = std::sqrt(distanceSquared);
+		const float score = lightData.light.intensity / (1.0f + distance);
+
+		rankedLights.emplace_back(score, &lightData);
+	}
+
+	const std::size_t selectedCount = std::min(MaxLightsPerObject, rankedLights.size());
+
+	std::partial_sort(
+		rankedLights.begin(),
+		rankedLights.begin() + selectedCount,
+		rankedLights.end(),
+		[](const auto& a, const auto& b)
+		{
+			return a.first > b.first;
+		});
+
+	std::vector<const LightData*> selectedLights;
+	selectedLights.reserve(selectedCount);
+
+	for (std::size_t i = 0; i < selectedCount; ++i)
+	{
+		selectedLights.push_back(rankedLights[i].second);
+	}
+
+	return selectedLights;
 }
-
-*/

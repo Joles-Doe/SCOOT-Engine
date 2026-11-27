@@ -8,6 +8,7 @@
 #include "Object/Components/Renderer/Renderer.h"
 #include "Object/Components/Input/Input.h"
 #include "Object/Components/Time/Time.h"
+#include "Object/Components/Light/Light.h"
 
 class TestScene : public Scene
 {

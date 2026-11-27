@@ -15,5 +15,5 @@ private:
 	Input* inputComponent;
 
 	float rotation{ 0.0f };
-	float rotationSpeed{ 2.0f };
+	float rotationSpeed{ 0.75f };
 };

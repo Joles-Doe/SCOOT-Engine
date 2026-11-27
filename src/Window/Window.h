@@ -3,6 +3,8 @@
 #include <SDL.h>
 #include <GL/glew.h>
 #include <iostream>
+#include <stdexcept>
+#include <string>
 
 class Window
 {
@@ -16,4 +18,5 @@ public:
 
 private:
 	SDL_Window* window{ nullptr };
+	SDL_GLContext glContext{ nullptr };
 };

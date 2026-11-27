@@ -7,18 +7,15 @@ Window::Window(int windowWidth, int windowHeight, const char* windowName)
         throw std::runtime_error("SDL_Init failed");
     }
 
-    SDL_GL_SetAttribute(
-        SDL_GL_CONTEXT_MAJOR_VERSION, 3
-    );
-
-    SDL_GL_SetAttribute(
-        SDL_GL_CONTEXT_MINOR_VERSION, 3
-    );
-
-    SDL_GL_SetAttribute(
-        SDL_GL_CONTEXT_PROFILE_MASK,
-        SDL_GL_CONTEXT_PROFILE_CORE
-    );
+    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4) != 0 ||
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 5) != 0 ||
+        SDL_GL_SetAttribute(
+            SDL_GL_CONTEXT_PROFILE_MASK,
+            SDL_GL_CONTEXT_PROFILE_CORE) != 0)
+    {
+        throw std::runtime_error(
+            std::string("Failed to request OpenGL 4.5 Core: ") + SDL_GetError());
+    }
 
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -36,11 +33,20 @@ Window::Window(int windowWidth, int windowHeight, const char* windowName)
         SDL_WINDOW_SHOWN |
         SDL_WINDOW_RESIZABLE
     );
+
+    if (window == nullptr)
+    {
+        throw std::runtime_error(std::string("SDL_CreateWindow failed: ") + SDL_GetError());
+    }
     
-    if (!SDL_GL_CreateContext(window))
-	{
-		throw std::runtime_error("SDL_GL_CreateContext failed");
-	}
+    glContext = SDL_GL_CreateContext(window);
+    if (glContext == nullptr)
+    {
+        const std::string error = SDL_GetError();
+        SDL_DestroyWindow(window);
+        window = nullptr;
+        throw std::runtime_error("SDL_GL_CreateContext failed (OpenGL 4.5 Core required): " + error);
+    }
 
     if (glewInit() != GLEW_OK)
     {
@@ -50,8 +56,8 @@ Window::Window(int windowWidth, int windowHeight, const char* windowName)
 
 Window::~Window()
 {
-    SDL_GL_DeleteContext(window);
-    SDL_DestroyWindow(window);
+	if (glContext != nullptr) SDL_GL_DeleteContext(glContext);
+	if (window != nullptr) SDL_DestroyWindow(window);
     SDL_Quit();
 }
 
